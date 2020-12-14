@@ -7,17 +7,20 @@ email={aracne-2021@defeo.lu},
 } %da inserire all'inizio del contributo
 
 
-\chapter[toc=Demystifying Isogeny Based Cryptography\\{\protect\small\emph{Luca De Feo}}, headings=Isogeny Based Cryptography]{Demystifying Isogeny Based Cryptography\\\vspace{2mm}\normalsize \textsc{Luca De Feo}\protect}
+\chapter[toc=Isogenies Demystified\\{\protect\small\emph{Luca De Feo}}, headings=Isogenies Demystified]{Isogenies Demystified\\\vspace{2mm}\normalsize \textsc{Luca De Feo}\protect}
 
 \addtocontents{toc}{\protect\vspace{-4mm}}
 
 \begin{otherlanguage}{english}
   \def\Z{\mathbb{Z}}
+  \def\Q{\mathbb{Q}}
   \def\F{\mathbb{F}}
   \def\exp{\mathrm{exp}}
   \def\com{\mathcal{C}}
   \def\Gal{\mathrm{Gal}}
   \def\End{\mathrm{End}}
+  \def\Ell{\mathrm{Ell}}
+  \def\Cl{\mathrm{Cl}}
   \def\O{\mathcal{O}}
   
   Isogenies, what are they? Like the character in Alessandro Manzoni's
@@ -295,7 +298,7 @@ email={aracne-2021@defeo.lu},
         \end{scope}
       \end{tikzpicture}
       \caption{The supersingular isogeny graphs of degree 2
-        (blue,continuous) and 3 (red,dashed) on $\F_{97^2}$.}
+        (blue, continuous) and 3 (red, dashed) on $\F_{97^2}$.}
       \label{fig:sidh}
     \end{minipage}
     \hfill
@@ -362,37 +365,411 @@ email={aracne-2021@defeo.lu},
   
   \section{Endomorphism rings}
 
-  Everything about isogeny graphs can be understood by looking at
+  Everything about isogeny graphs can be understood via
   \emph{endomorphism rings}. Endomorphisms of elliptic curves form a
   ring, under addition and composition.\footnote{A common source of
     confusion is that an extra \emph{null endomorphism} must be added
     to the set in order to make it a ring, although, by definition, a
     constant map does not qualify as an isogeny.} Their structure is
   well understood: they are free $\Z$-modules of dimension $1$, $2$ or
-  $4$.
+  $4$. There is more: if we exclude the subring $\Z\subset\End(E)$,
+  any endomorphism is a quadratic integer, i.e., it is annihilated by
+  a monic quadratic polynomial with integer coefficients. These
+  constraints leave only a handful of possible choices.
 
   \begin{theorem}
     Let $E$ be an elliptic curve over a field of characteristic $p$,
     its endomorphism ring is isomorphic to one of the following:
-    \begin{itemize}
+    \begin{enumerate}
     \item the ring of integers, only if $p=0$,
     \item an order in a quadratic imaginary number field,
     \item only if $p\ne 0$, a maximal order in the quaternion algebra
       ramified at $p$ and infinity.
-    \end{itemize}
+    \end{enumerate}
+    In positive characteristic, the second case is called
+    \emph{ordinary} and the third \emph{supersingular}.
   \end{theorem}
-  
+
+  If $\phi:E\to E'$ is an isogeny, $\hat\phi:E'\to E$ its dual, and
+  $\omega:E\to E$ an endomorphism of $E$, then $\phi\omega\hat\phi$ is
+  an endomorphism of $E'$. It stands to reason that the endomorphism
+  rings of $E$ and $E'$ must be somehow related.  Indeed, to any
+  separable isogeny $\phi$ we can associate its \emph{kernel ideal}
+  $I_\phi\subset\End(E)$, defined by
+  \[I_\phi = \bigl\{ \omega \in \End(E) \;\big\vert\; \omega(\ker\phi)
+    = \{0\} \bigr\},\] %
+  and it turns out we can extend\footnote{The correspondence for
+    inseparable isogenies is slightly more technical, and we are
+    forced to omit the details.} this correspondence to a bijection
+  between isogenies and ideals.
+
+  Then, for any ideal $I_\phi\subset\End(E)$ with associated isogeny
+  $\phi:E\to E'$, we define the operation $\star$ by
+  $I_\phi\star E \equiv E'$. In general this operation does not have a
+  simple algebraic structure, however, if we restrict the ideals in an
+  appropriate manner, $\star$ becomes a \emph{group action}. The
+  simplest such case is the object of the \emph{fundamental theorem of
+    complex multiplication}.
+
   \begin{theorem}[Complex multiplication]
-    Let 
+    \label{th:cm}
+    Let $\F_q$ be a finite field, let $\O\subset\Q(\sqrt{-D})$ be a
+    quadratic imaginary order, denote by $\Ell_q(\O)$ the set of
+    elliptic curves over $\F_q$ with endomorphism ring isomorphic to
+    $\O$ and assume it is non-empty. The operation $\star$ defines an
+    action of the group of invertible ideals of $\O$ on $\Ell_q(\O)$,
+    and the action factors through the subgroup of principal
+    ideals. Said otherwise, the \emph{class group} $\Cl(\O)$ acts
+    regularly on $\Ell_q(\O)$.
   \end{theorem}
 
+  Similar statements hold when $E$ is supersingular and
+  $\O\subset\End(E)$ is a quadratic order. An easy case is when $E$ is
+  defined over a prime field $\F_p$: then the subring
+  $\End_{\F_p}(E)\subset\End(E)$ of $\F_p$-rational endomorphism is
+  isomorphic to one of $\O=\Z[\sqrt{-p}]$ or $\O=\Z[(1+\sqrt{-p})/2]$,
+  and if we define $\Ell_p(\O)$ as the set of all supersingular curves
+  over $\F_p$ such that $\End_{\F_p}(E)\simeq\O$, the group $\Cl(\O)$
+  acts regularly on $\Ell_p(\O)$ like in the complex multiplication
+  case~\cite{Delfs2016}.
 
+  These facts explain why the graph in Figure~\ref{fig:csidh} is
+  isomorphic to a Cayley graph of $\Z/12\Z$. To construct the
+  examples, we chose $\O\simeq\Z[\sqrt{-89}]$, which has class group
+  isomorphic to $\Z/12\Z$ and is generated by an ideal of norm $3$
+  (more formally, an ideal class representing $3$), corresponding to
+  isogenies of degree $3$ (the blue edges). Thus $\Ell_{89}(\O)$ is
+  the set of all $\F_{89}$-rational supersingular curves, but also,
+  for any $p$ such that $-89$ is a square modulo $p$, there exist a
+  power $q$ of $p$ such that $\Ell_q(\O)$ is non-empty. In any of
+  these cases, $\Cl(\O)$ acts faithfully and transitively on
+  $\Ell_q(\O)$, and the action of a basis of elements of $\Cl(\O)$ can
+  be visualized as a Cayley graph.
+
+  While Theorem~\ref{th:cm} describes almost completely isogeny graphs
+  of ordinary curves, the picture for supersingular graphs is still
+  blurry. Mestre~\cite{mestre86}, then Pizer~\cite{pizer1,pizer2},
+  then Kohel~\cite{kohel} showed that full supersingular graphs are
+  connected, regular, and satisfy the \emph{Ramanujan property}, i.e.,
+  they are optimal expanders~\cite{}.
 
   
-% - CSIDH & SIDH
+  \section{CSIDH\dots}
+  And we are back to isogeny based cryptography 101: key exchange.
+
+  Couveignes~\cite{cryptoeprint:2006:291} was the first to propose a
+  key exchange scheme based on the group action of complex
+  multiplication, however his work stayed mostly unknown. His ideas
+  were independently rediscovered ten years later by Rostovtsev and
+  Stolbunov~\cite{rostovtsev+stolbunov06}, who were the first to
+  suggest isogenies may be good candidates for constructing
+  quantum-resistant schemes.
+
+  Replicating the Diffie--Hellman key exchange with a
+  \emph{cryptographic group action} is almost immediate. Given a
+  finite abelian group $G$ acting regularly on a set $X$, given a
+  \emph{starting element} $x_0\in X$, let secret keys be random
+  elements $a,b\in G$, and define public keys as $x_a = a\star x_0$
+  and $x_b = b\star x_0$. Then, the shared secret is obtained as
+  \[a\star x_b = (ab)\star x_0 = b\star x_a.\] %
+  This key exchange is secure if the analogue of the Diffie--Hellman
+  assumption holds for the group action $(G,X,\star)$.
+
+  However the case of the complex multiplication group action
+  $(\Cl(\O), \Ell_q(\O), \star)$ is more complicated for a number of
+  reasons:
+  \begin{enumerate}
+  \item It is usually not possible to test equality in $\Cl(\O)$, nor
+    to sample uniformly from it;
+  \item Evaluating $a\star x$ cannot be done in polynomial time for a
+    majority of inputs $a$, even though every element $a\in\Cl(\O)$
+    does have a representation that supports fast evaluation of the
+    group action.
+  \end{enumerate}
+  These two limitations follow from two fundamental algorithmic
+  obstacles:
+  \begin{enumerate}
+  \item The order, and thus also the group structure of $\Cl(\O)$ is
+    generally unknown. Indeed, the best classical algorithm to compute
+    the group structure of $\Cl(\O)$ is a type of index calculus, with
+    subexponential complexity $L_{\#\O}(1/2)$. The current record is
+    the computation for the class group of discriminant
+    $4\cdot 587\cdot\prod_{i=1}^{73} \ell_i$, where $\ell_i$ are the
+    first $73$ odd primes~\cite{10.1007/978-3-030-34578-5_9}, which
+    took about 52 core years on an inhomogeneous
+    cluster. Unfortunately discriminants used in isogeny-based
+    cryptography may be larger. The good news is that computing the
+    structure of $\Cl(\O)$ is precisely as difficult as breaking RSA
+    for a quantum computer, thus we only have to wait!
+  \item The cost of evaluating the action of an ideal
+    $I_\phi\subset\End(E)$ is polynomial in the norm of the ideal,
+    i.e., in the degree of the associated isogeny $\phi$. This
+    severely limits the kind of ideals for which it is feasible to
+    evaluate the action $\star$.
+  \end{enumerate}
+
+  Before giving the solution to this conundrum, let's take a step back
+  and see how classical discrete logarithms are related to Cayley
+  graphs. Given a group $G$ of prime order $p$, exponentiation defines
+  a regular action of $(\Z/p\Z)^\times$ on $G\setminus\{1\}$ by
+  \[a\star g \equiv g^a.\] %
+  From a subset $S\subset(\Z/p\Z)^\times$, we may construct the Cayley
+  graph $[(\Z/p\Z)^\times,S]$. For example, the graph in
+  Figure~\ref{fig:csidh} can be equally seen as the Cayley graph of
+  $(\Z/13\Z)^\times$ generated by $S=\{2,8,3\}$. The same graph can be
+  equally interpreted as the graph whose vertices are non-identity
+  elements of $G$, and where two vertices $g,h$ are connected whenever
+  $h=g^a$ for some $a\in S$. This graph is sometimes called the
+  \emph{Schreier graph} $(\star,S)$.
+
+  Given two elements $g,h\in G$, finding a path between them in the
+  Schreier graph is equivalent to computing their discrete
+  logarithm. There is only one gotcha: the path must be \emph{short},
+  e.g., of polynomial length in $\log(\#G)$, otherwise the solution is
+  practically useless. Intuitively, the larger $S$, the smaller the
+  diameter of the graph, and indeed it is well known that Cayley
+  graphs tend to make good expanders.
+
+  If we take $S$ large enough, then we even have an effective way to
+  sample random elements in $G$ nearly uniformly: it is sufficient to
+  start from an arbitrary generator of $G$, and perform a random walk
+  of polynomial length in $\log(\#G)$. This fact can be used to
+  construct a key exchange similar to Diffie--Hellman: fix a starting
+  generator $g$, sample random walks
+  $(a_1,\ldots,a_n), (b_1,\ldots,b_n)\in S^*$, define as public keys
+  \[g^a = g^{\prod a_i}, \quad g^b = g^{\prod b_i},\] then the shared
+  secret $g^{ab}$ is obtained by replaying the same random walks from
+  $g^b$ and $g^a$ respectively.
+
+  Coming back to the complex multiplication group action, Jao \emph{et
+    al.}~\cite{jao+miller+venkatesan09} proved, assuming the
+  generalized Riemann hypothesis, that Cayley graphs $[\Cl(\O),S]$
+  form an expander family as soon as
+  $\#S\in O\bigl(\log(\#\Cl(\O))^2\bigr)$. Following the previous
+  sketch, we immediately obtain a key exchange scheme based on complex
+  multiplication.
+
+  \begin{description}
+  \item[Setup.] Choose a quadratic imaginary order $\O$ and an
+    elliptic curve $E_0 \in \Ell(\O)$. Fix a set
+    $\{s_1,\dots,s_n\}\subset\Cl(\O)$ of ideal representatives of
+    small norm.
+  \item[Public key generation.] Sample a random integer vector
+    $(e_1,\ldots,e_n)$ and construct the ideal
+    \[I = \prod_{i=1}^n s_i^{e_i};\]
+    output the public key $I\star E_0$.
+  \item[Shared secret computation.] Given a public key $E$, and a
+    secret ideal $I\subset\O$, output the shared secret $I\star E$.
+  \end{description}
+
+  This is precisely the key exchange scheme of Couveignes, Rostovtsev
+  and Stolbunov, although we have left some details unspecified: how
+  to choose $\O$, how to find $E_0$, how to compute the group action,
+  \dots For a long time, the only known way to instantiate the scheme
+  produced a system too slow to be useful in practice, a fact reported
+  as recently as 2018~\cite{AC:DeFKieSmi18}. A breakthrough came the
+  same year, though, with the invention of CSIDH\footnote{Pronounced
+    like \emph{``sea side''}.}~\cite{10.1007/978-3-030-03332-3_15}, an
+  instantiation based on the action of $\Cl(-p)$ on the set of
+  supersingular curves defined over $\F_p$. Parameters in CSIDH are
+  chosen as follows:
+  \begin{itemize}
+  \item $p$ is a prime such that $p+1=4\prod \ell_i$, where $\ell_i$
+    is a set of small odd primes. For a target classical security of
+    $\lambda$ bits, $\log_2(p)$ needs to be approximately $4\lambda$.
+  \item The quadratic order is $\O=\Z[\sqrt{-p}]$.  The set of ideal
+    representatives of small norm is taken to be
+    $s_i=(\ell_i,1-\sqrt{-p})$, for each of the $\ell_i$ in the
+    factorization of $p+1$.
+  \item Thanks to the constraints on $p$, the elliptic curve of
+    equation $y^2=x^3+x$ is supersingular, has $\F_p$-rational
+    endomorphism ring isomorphic to $\O$, and is thus taken as
+    $E_0$.
+  \item The secret vectors $(e_i)$ are sampled from an integer box
+    $[-B,B]^n$, such that $(2B+1)^n\approx\sqrt{p}$.
+  \end{itemize}
+  
+  These choices make for a surprisingly simple algorithm to evaluate
+  the action $\star$. Indeed, after identifying $\sqrt{-p}$ to the
+  Frobenius endomorphism of any curve $E\in\Ell(\O)$, the isogeny
+  kernel associated to $s_i=(\ell_i,1-\sqrt{-p})$ is simply the set
+  $E[\ell_i]\cap E(\F_p)$ of $\F_p$-rational points of order
+  $\ell_i$. Given this kernel, Vélu's
+  formulas~\cite{velu71,moody2016analogues,PQCRYPTO:Renes18}
+  efficiently compute the associated isogeny and the image curve
+  $s_i\star E$ using $O(\ell_i)$ finite field operations.\footnote{In
+    a recent development~\cite{cryptoeprint:2020:341}, the upper bound
+    on the complexity of computing the isogeny action has been
+    improved to $\tilde{O}(\sqrt{\ell_i})$.}  Furthermore, it is not
+  difficult to see that the inverse ideal class $s_i^{-1}$ is
+  represented by $(\ell_i,1+\sqrt{-p})$, and the associated kernel is
+  the set of points of order $\ell_i$ that have abscissa in $\F_p$ and
+  ordinate in $\F_{p^2}$. Thus, the action of any ideal $s_i^{\pm e}$
+  can be evaluated by $e$ applications of Vélu's formulas, and the
+  action of the product ideal $\prod s_i^{e_i}$ is simply the
+  composition of each individual action.  The total cost of evaluating
+  the CSIDH group action is thus $\sim B\sum\ell_i$ finite field
+  operations, ignoring some not-so-negligible computations such as
+  finding the generators of the various isogeny kernels.
+
+  Well known heuristics on class numbers show that the number of
+  vertices of the CSIDH Schreier graph is roughly $\sqrt{-p}$, which
+  motivates taking $\log_2(p)\approx 4\lambda$ to protect against
+  meet-in-the-middle attacks in the graph.  It is worth pointing out
+  that Jao \emph{et al.}'s theorem does not apply to the CSIDH graph,
+  because its degree of regularity is in $O(\log_2(p))$ rather than
+  $O(\log_2(p)^2)$; nevertheless, reasonable heuristics let us still
+  argue that the graph has good expansion properties, and thus that
+  the distribution of public keys is practically indistinguishable
+  from uniform.
+  
+\section{\dots and SIDH}
+For all its elegance and simplicity, CSIDH has a serious drawback when
+it comes to quantum security, as we shall see next. Its evil twin
+SIDH\footnote{Prounounced by spelling out the acronym
+  \emph{``ess-eye-dee-aitch''}.}~\cite{jao+defeo2011,defeo+jao+plut12}
+was designed to overcome this limitation.
+
+The goal of SIDH is to be able to perform a key exchange based on
+random walks in the full supersingular graph. Since no group acts on
+the full graph, constructing commuting isogeny walks is not obvious;
+however the absence of a group action is also what makes attacking
+SIDH more difficult.
+
+But let's start from the kind of isogeny walks we perform in SIDH. As
+we know, in CSIDH an isogeny walk is defined by a list
+$(e_1,\dots,e_n)$ of integers. Each integer corresponds to a different
+isogeny degree $\ell_i$, the magnitude $|e_i|$ indicates the number of
+steps to travel along the $\ell_i$-isogeny cycle (each cycle is
+represented by a different color in Figure~\ref{fig:csidh}), and the
+sign of $e_i$ means ``go forward'' or ``go backward'' (recall the
+meaning to the orientation was given by the Frobenius endomorphism).
+The order in which the different primes $\ell_i$ are processed is
+irrelevant, as we know that the isogenies correspond to an abelian
+group action.
+
+It is absolutely necessary that CSIDH uses a fairly large collection
+of primes $\ell_i$. Indeed, if the vectors $(e_i)$ are selected from a
+box $[-B,B]^n$, then the number of distinct end points for these
+isogeny walks is at most $(2B+1)^n$, but the cost of computing one
+walk is proportional to $Bn$. Said otherwise, the only parameter in
+which the key space size grows exponentially (compared to the cost of
+executing the key exchange) is the number of distinct primes $\ell_i$.
+
+Moving to the full supersingular graph the outlook changes. There are
+approximately $p/12$ supersingular isomorphism classes in the
+algebraic closure of $\F_p$, and they are all defined over $\F_{p^2}$.
+Over $\F_{p^2}$, every supersingular curve has exactly $\ell+1$
+distinct isogenies for any prime $\ell$, i.e., the $\ell$-isogeny
+graph is $(\ell+1)$-regular.\footnote{A small exception must be
+  granted to the curves of $j$-invariant $0$ or $1728$, which have
+  out-degree $\ell+1$, but may have lower in-degree.} Hence, unlike in
+the complex multiplication case, starting from any supersingular curve
+$E$ there are exactly $(\ell+1)\ell^n$ distinct $\ell$-isogeny walks
+of length $n+1$, instead of just $2$. Furthermore, the Ramanujan
+property proved by Pizer~\cite{pizer1,pizer2} indicates that the
+induced distribution on the vertices quickly approaches the uniform
+distribution as soon as $n\approx c_\ell\log(p)$ for some constant
+$c_\ell$.
+
+These facts were already exploited by Charles \emph{et
+  al.}~\cite{JC:ChaLauGor09} to construct a collision resistant hash
+function based on pseudo-random walks in supersingular $2$-isogeny
+graphs, and their work was indeed an inspiration for SIDH.  In
+principle, we would like to find a way for two parties to perform
+walks in the $\ell$-isogeny graph in such a way that the walks
+commute. However there is an obvious tension here: if the proverbial
+Alice and Bob each perform an isogeny walk of length $n$, call them
+$A$ and $B$, and if the order of $A$ and $B$ does not count, i.e.,
+$A\circ B=B\circ A$, then why would the order of the steps
+\emph{within} $A$ or $B$ count?  Indeed we know no way to construct
+commuting walks in a supersingular graph in a way that is compatible
+with the security of a key exchange scheme.
+
+The trick used by SIDH is to have Alice and Bob do walks in two
+different supersingular graphs on the same vertex set (see
+Figure~\ref{fig:sidh}). Fix two primes, say $2$ and $3$. Alice
+performs a random walk $A$ in the $2$-isogeny graph, while Bob
+performs a random walk $B$ in the $3$-isogeny graph. By coordinating
+their efforts carefully, they can ensure that $A\circ B = B\circ A$,
+and still get a secure key exchange protocol.
+
+The way this works is astonishingly simple. A $2$-isogeny walk of
+length $n$ is nothing else than a composition of isogenies of degree
+$2$, i.e., an isogeny of degree $2^n$. Call $\phi_A$ this isogeny, and
+call $R_A$ a point of order $2^n$ generating $\ker\phi_A$. Similarly,
+let $\phi_B$ be a $3^m$-isogeny and let $R_B$ be a generator of its
+kernel. Then $R_A+R_B$ is a point of order $2^n3^m$, and to it is
+associated a unique isogeny $\phi_{AB}$ of the same degree. Then,
+there exist isogenies $\phi_A'$ and $\phi_B'$ such that the following
+diagram commutes
+\begin{equation}
+  \label{eq:sidh}
+  \begin{tikzpicture}[scale=2,baseline=-1cm]
+    \node (E0)  at (0,0) {\(E_0\)};
+    \node (EA)  at (1,0) {\(E_A\)};
+    \node (EB)  at (0,-1) {\(E_B\)};
+    \node (EAB) at (1,-1) {\(E_{AB}\)};
+    \draw[->,font=\small]
+    (E0) edge[blue] node[auto] {\(\phi_A\)} (EA)
+         edge[red] node[auto,swap] {\(\phi_B\)}  (EB)
+         edge[dashed] node[auto] {\(\phi_{AB}\)}  (EAB)
+    (EA) edge[red] node[auto] {\(\phi_B'\)}  (EAB)
+    (EB) edge[blue] node[auto,swap] {\(\phi_A'\)}  (EAB);
+  \end{tikzpicture}
+\end{equation}
+Chasing around the diagram, it is evident that
+$\ker\phi_A' = \langle\phi_B(R_A)\rangle$ and
+$\ker\phi_B' = \langle\phi_A(R_B)\rangle$.
+
+But we seem to have reached a dead end: $\phi_B$ is a secret of Bob's,
+and $R_A$ is a secret of Alice; how can Bob safely make Alice aware of
+the value $\phi_B(R_A)$? The trick is to define public bases
+$E[2^n]=\langle P_A,Q_A\rangle$ and $E[3^m]=\langle P_B,Q_B\rangle$,
+and to write $R_A$ (resp., $R_B$) as a secret linear combination of
+$P_A,Q_A$ (resp., $P_B,Q_B$). Then, Bob transmits to Alice the values
+$\phi_B(P_A),\phi_B(Q_A)$, from which Alice can compute $R_A$ without
+giving away her secret integers.
+
+There is one trick left to make SIDH work. For the torsion bases and
+the isogenies to have compact and efficient representations, it is
+necessary to choose the curves very carefully, similarly to what we
+did for CSIDH.  Ideally, we would like the torsion groups $E[2^n]$ and
+$E[3^m]$ to be defined over the base field $\F_{p^2}$, so that
+$P_A,Q_A,P_B,Q_B$ are represented by a pair of elements of $\F_{p^2}$
+each.\footnote{One can do even better and represent $P_A,Q_A$ by a
+  triplet of elements of $\F_{p^2}$~\cite{C:CosLonNae16}.} Over
+$\F_{p^2}$, there are two isogeny classes of supersingular curves: one
+with curves of order $(p+1)^2$, and one of order $(p-1)^2$, and the
+two isogeny graphs are isomorphic. It is customary to pick the first
+and choose $p$ so that $p+1=2^n3^m$, thus fulfilling our
+requirements.\footnote{Costello~\cite{cryptoeprint:2019:1145} has
+  recently explored variants of SIDH where the two torsion groups are
+  spread over the two classes of order $(p+1)^2$ and $(p-1)^2$.}
+
+To summarize, SIDH is instantiated as follows; we only give the
+operations for Alice, the equivalent ones for Bob are an easy
+exercise.
+\begin{description}
+\item[Setup.] Choose a prime $p$ of the form $p+1=2^n3^m$. The starting
+  curve is $E_0\;:\;y^2=x^3+x$. Select arbitrary bases
+  $E[2^n]=\langle P_A,Q_A\rangle$ and $E[3^m]=\langle P_B,Q_B\rangle$.
+\item[Public key generation.] Choose a random integer $r_a$, set
+  $R_A=P_A+[r_a]Q_a$. Compute the isogeny $\phi_A:E_0\to E_A$ of
+  kernel $R_A$. Send $E_A,\phi_A(P_B),\phi_A(Q_B)$ to Bob.
+\item[Shared secret computation] Upon receiving
+  $E_B,\phi_B(P_A),\phi_B(Q_A)$, compute
+  $R_A'=\phi_B(P_A)+[r_a]\phi_B(Q_A)$. Compute the isogeny
+  $\phi_A':E_B\to E_{AB}$, output $j(E_{AB})$.
+\end{description}
+
+
+\section{Breaking isogeny based systems}
+
+
+
 % - Security of CSIDH & SIDH
-% - Signatures
-% - Other stuff
+% - Topics: hashing, commitments, signatures
 
   
 \end{otherlanguage}
@@ -405,8 +782,9 @@ email={aracne-2021@defeo.lu},
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "main"
+%%% TeX-master: "plain"
 %%% End:
 
 % LocalWords:  isogeny additively morphisms morphism supersingular
-% LocalWords:  isogenies undirected expander
+% LocalWords:  isogenies undirected expander quaternion endomorphism
+% LocalWords:  monic Cayley discriminants inhomogeneous instantiation

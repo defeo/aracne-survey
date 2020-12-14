@@ -1,2 +1,6 @@
-main.pdf: main.tex sidh-survey.tex
+plain.pdf: .FORCE
+	latexmk --pdf plain.tex
+main.pdf: .FORCE
 	latexmk --pdf main.tex
+
+.FORCE:
