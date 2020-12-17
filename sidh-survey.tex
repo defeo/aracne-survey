@@ -190,13 +190,16 @@ email={aracne-2021@defeo.lu},
   inseparability, degree, and more. However to keep this presentation
   light we will skip these, and direct the curious reader
   to~\cite{silverman:elliptic,milne2006,defeo2017isogenybased}.  Here,
-  unless stated otherwise, all isogenies will be \emph{separable}, and
-  $\deg\varphi=\#\ker\varphi$.
+  unless stated otherwise, by \emph{$\ell$-isogeny} mean a
+  \emph{separable} isogeny of \emph{degree} $\ell=\#\ker\varphi$. The
+  important property to keep in mind is that the degree is
+  multiplicative:
+  \[\deg(\psi\circ\phi) = \deg(\psi)\deg(\phi).\]
 
   \begin{theorem}[Dual isogeny theorem]
     Let $\varphi:E\to E'$ be an isogeny of degree $m$. %
-    There is a unique isogeny $\hat{\varphi}:E'\to E$, called the
-    \emph{dual isogeny}, such that
+    There is a unique isogeny $\hat{\varphi}:E'\to E$ of degree $m$,
+    called the \emph{dual isogeny}, such that
     \[\hat{\varphi}\circ\varphi = [m]_E, \quad \varphi\circ\hat{\varphi} = [m]_{E'}.\] %
   \end{theorem}
 
@@ -612,16 +615,12 @@ email={aracne-2021@defeo.lu},
   operations, ignoring some not-so-negligible computations such as
   finding the generators of the various isogeny kernels.
 
-  Well known heuristics on class numbers show that the number of
-  vertices of the CSIDH Schreier graph is roughly $\sqrt{-p}$, which
-  motivates taking $\log_2(p)\approx 4\lambda$ to protect against
-  meet-in-the-middle attacks in the graph.  It is worth pointing out
-  that Jao \emph{et al.}'s theorem does not apply to the CSIDH graph,
-  because its degree of regularity is in $O(\log_2(p))$ rather than
-  $O(\log_2(p)^2)$; nevertheless, reasonable heuristics let us still
-  argue that the graph has good expansion properties, and thus that
-  the distribution of public keys is practically indistinguishable
-  from uniform.
+  It is worth pointing out that Jao \emph{et al.}'s theorem does not
+  apply to the CSIDH graph, because its degree of regularity is in
+  $O(\log_2(p))$ rather than $O(\log_2(p)^2)$; nevertheless,
+  reasonable heuristics let us still argue that the graph has good
+  expansion properties, and thus that the distribution of public keys
+  is practically indistinguishable from uniform.
   
 \section{\dots and SIDH}
 For all its elegance and simplicity, CSIDH has a serious drawback when
@@ -642,11 +641,10 @@ $(e_1,\dots,e_n)$ of integers. Each integer corresponds to a different
 isogeny degree $\ell_i$, the magnitude $|e_i|$ indicates the number of
 steps to travel along the $\ell_i$-isogeny cycle (each cycle is
 represented by a different color in Figure~\ref{fig:csidh}), and the
-sign of $e_i$ means ``go forward'' or ``go backward'' (recall the
-meaning to the orientation was given by the Frobenius endomorphism).
-The order in which the different primes $\ell_i$ are processed is
-irrelevant, as we know that the isogenies correspond to an abelian
-group action.
+sign of $e_i$ means ``go forward'' or ``go backward'' (the meaning to
+the orientation was given by the Frobenius endomorphism).  The order
+in which the different primes $\ell_i$ are processed is irrelevant, as
+we know that isogenies correspond to an abelian group action.
 
 It is absolutely necessary that CSIDH uses a fairly large collection
 of primes $\ell_i$. Indeed, if the vectors $(e_i)$ are selected from a
@@ -663,9 +661,16 @@ Over $\F_{p^2}$, every supersingular curve has exactly $\ell+1$
 distinct isogenies for any prime $\ell$, i.e., the $\ell$-isogeny
 graph is $(\ell+1)$-regular.\footnote{A small exception must be
   granted to the curves of $j$-invariant $0$ or $1728$, which have
-  out-degree $\ell+1$, but may have lower in-degree.} Hence, unlike in
-the complex multiplication case, starting from any supersingular curve
-$E$ there are exactly $(\ell+1)\ell^n$ distinct $\ell$-isogeny walks
+  out-degree $\ell+1$, but lower in-degree.} Hence, unlike in the
+complex multiplication case, starting from any supersingular curve $E$
+there are exactly $(\ell+1)\ell^n$ distinct
+non-backtracking\footnote{Most theorems for random walks in graphs are
+  stated for ordinary walks, where one undirected edge can be
+  immediately followed by the same edge in the opposite
+  direction. However, in our context, following an isogeny step by its
+  dual is not interesting: it produces a scalar multiplication
+  $[\ell]$ which is easily factored out of the walk, and does not
+  contribute to the security of the cryptosystem.} $\ell$-isogeny walks
 of length $n+1$, instead of just $2$. Furthermore, the Ramanujan
 property proved by Pizer~\cite{pizer1,pizer2} indicates that the
 induced distribution on the vertices quickly approaches the uniform
@@ -682,9 +687,9 @@ commute. However there is an obvious tension here: if the proverbial
 Alice and Bob each perform an isogeny walk of length $n$, call them
 $A$ and $B$, and if the order of $A$ and $B$ does not count, i.e.,
 $A\circ B=B\circ A$, then why would the order of the steps
-\emph{within} $A$ or $B$ count?  Indeed we know no way to construct
-commuting walks in a supersingular graph in a way that is compatible
-with the security of a key exchange scheme.
+\emph{within} $A$ or $B$ count, in general?  Indeed we know no way to
+construct commuting walks in a supersingular graph in a way that is
+compatible with the security of a key exchange scheme.
 
 The trick used by SIDH is to have Alice and Bob do walks in two
 different supersingular graphs on the same vertex set (see
@@ -740,16 +745,15 @@ $P_A,Q_A,P_B,Q_B$ are represented by a pair of elements of $\F_{p^2}$
 each.\footnote{One can do even better and represent $P_A,Q_A$ by a
   triplet of elements of $\F_{p^2}$~\cite{C:CosLonNae16}.} Over
 $\F_{p^2}$, there are two isogeny classes of supersingular curves: one
-with curves of order $(p+1)^2$, and one of order $(p-1)^2$, and the
-two isogeny graphs are isomorphic. It is customary to pick the first
-and choose $p$ so that $p+1=2^n3^m$, thus fulfilling our
+with curves of order $(p+1)^2$, and one of order $(p-1)^2$, and their
+$\ell$-isogeny graphs are isomorphic. It is customary to pick the
+first and choose $p$ so that $p+1=2^n3^m$, thus fulfilling our
 requirements.\footnote{Costello~\cite{cryptoeprint:2019:1145} has
   recently explored variants of SIDH where the two torsion groups are
   spread over the two classes of order $(p+1)^2$ and $(p-1)^2$.}
 
-To summarize, SIDH is instantiated as follows; we only give the
-operations for Alice, the equivalent ones for Bob are an easy
-exercise.
+To summarize, SIDH can be instantiated as follows; we only give the
+operations for Alice: for Bob, just switch the roles of $A$ and $B$.
 \begin{description}
 \item[Setup.] Choose a prime $p$ of the form $p+1=2^n3^m$. The starting
   curve is $E_0\;:\;y^2=x^3+x$. Select arbitrary bases
@@ -763,12 +767,178 @@ exercise.
   $\phi_A':E_B\to E_{AB}$, output $j(E_{AB})$.
 \end{description}
 
+This particular instantiation closely matches the parameters chosen
+for the NIST candidate SIKE~\cite{SIKE},\footnote{SIKE is the
+  encryption scheme derived from SIDH, the difference is purely
+  semantical, technical steps stay unchanged.} where the pair $(n,m)$
+is one of $(216,137)$, $(250, 159)$, $(305, 192)$, $(372, 239)$,
+depending on the security level.
 
-\section{Breaking isogeny based systems}
 
+\section{Breaking isogenies}
+What does it take to break an isogeny based cryptosystem? At the base
+of the pyramid, lies the fundamental problem of isogeny based
+cryptography.
 
+\begin{definition}[Isogeny walk problem]
+  Let $E_0,E_1$ two elliptic curves drawn at random from some isogeny
+  class over some finite field $k$, find a $k$-rational isogeny
+  $\phi:E_0\to E_1$ of smooth degree.
+\end{definition}
 
-% - Security of CSIDH & SIDH
+The ``smooth degree'' condition means that $\phi$ can be represented
+as a walk in some $k$-rational isogeny graph, which is an effective
+representation as long as the length of the walk is subexponential.
+It is clear that a solution to this problem breaks CSDIH, as it
+produces an ideal in the same ideal class as the secret key.  It is
+less evident that it also breaks SIDH, but Galbraith \emph{et al.}
+showed that this is indeed the case, assuming credible
+heurstics~\cite{AC:GPST16}. Galbraith \emph{et al.}, as well as
+Castryck \emph{et al.}~\cite{EC:CasPanVer20}, also showed that, for
+supersingular curves, the isogeny walk problem is heuristically
+equivalent to the following one.
+
+\begin{definition}[Endomorphism ring problem]
+  Given a random supersingular curve $E/\F_{p^2}$, compute a basis of
+  its endomorphism ring.
+\end{definition}
+
+These two problems are the mainstays of isogeny based cryptography:
+break them, and all the field evaporates. However, no cryptosystem is
+actually based on them: in every case, some stronger assumption is
+needed to prove their security. For CSIDH, for example, the curve
+$E_0$ is usually fixed, and its endomorphism ring known. This is not a
+major problem if the curve $E_1$ is uniformly random: indeed, an
+algorithm solving this specialized variant of the problem can be
+applied twice to solve the general instance. However, in CSIDH the
+curve $E_1$ is not provably uniformly distributed, but rather assumed
+to be computationally indistinguishable from random. Admittedly, this
+is a minor departure from the original problem, and there is a sort of
+consensus that the security of CSIDH is not far from that of the
+isogeny walk problem.
+
+The situation of SIDH is more delicate:
+\begin{itemize}
+\item The curve $E_0$ is also fixed and of known endomorphism ring;
+\item The curve $E_1$ is very far from being uniformly random, as it
+  is at distance $\approx\log_\ell(p)/2$ from $E_0$, considerably
+  shorter than the diameter of the graph;
+\item On top of $E_1$, the SIDH protocol also publishes the evaluation
+  points $\phi(P_B)$ and $\phi(Q_B)$, from whose knowledge one can
+  compute the action of $\phi$ on any point of $E_0[e^m]$ (change $B$
+  to $A$ and $3$ to $2$ for Bob's isogeny).
+\end{itemize}
+
+The \emph{SIDH assumptions} essentially state that it is fine to give
+out this additional information, however they are widely believed to
+be considerably stronger than the isogeny walk assumption, as
+indicated by so called \emph{torsion point attacks} on overstretched
+variants of SIDH~\cite{AC:Petit17,EPRINT:KMPPS20}.
+
+Finally, some may object that the prime $p$ used in SIDH or CSIDH has
+a very special form, and this should be taken into account when
+evaluating the strength of the relative assumptions. However using
+special primes for efficiency has been a common practice in elliptic
+curve cryptography for decades, and it is widely believed that such
+specialization has negligible impact on security.
+
+It thus appears that from an assumption ``quality'' perspective CSIDH
+is better positioned than SIDH.  Unfortunately the order is reversed
+when we look at actual attacks.  Indeed the isogeny walk assumption is
+not a single one, but rather a family of assumptions: one for each
+isogeny class considered. The isogeny class of SIDH comprises all
+supersingular curves over $\F_{p^2}$, and for that class no algorithm
+better than exponential is known to solve the isogeny walk problem.
+For the isogeny classes considered in CSIDH or in the earlier
+Couveignes--Rostovtsev--Stolbunov protocols, instead, a powerful
+quantum algorithm due to Kuperberg solves the problem in
+subexponential
+time~\cite{regev04,Kup,Kuperberg2013,childs2014constructing}.
+
+Kuperberg's is a generic algorithm for the \emph{abelian hidden shift
+  problem}, also known as the \emph{dihedral hidden subgroup problem}:
+given a regular abelian group action $(G,X,\star)$ and a pair
+$x_0,x_1\in X$, given quantum access to an oracle evaluating
+$g\star x_0$ for arbitrary $g$, it finds the unique $\bar{g}$ such
+that $x_1=\bar{g}\star x_0$. Its asymptotic complexity is roughly
+$\exp\bigl(\sqrt{\log(\#G)}\bigr)$, and thus CSIDH parameters must
+scale quadratically with the security level.  However the exact
+quantum security of concrete CSIDH parameters is the subject of a
+heated debate, and a consensus has yet to be
+reached~\cite{INDOCRYPT:BiaJaoSan14,BIJ18,Jao-etal-kuperberg-2018,10.1007/978-3-030-17656-3_15,EC:BonSch20,EC:Peikert20,cryptoeprint:2020:1520}.
+
+On the classical front, things are simpler. The best classical attack
+on CSIDH has been known for 20 years: it is a simple
+meet-in-the-middle algorithm on the graph, running two pseudo-random
+walks in parallel until they
+meet~\cite{Gal,EC:GalHesSma02,galbraith+stolbunov11,Delfs2016}.  The
+CSIDH graph contains $O(p^{1/2})$ vertices, and thus the
+meet-in-the-middle attack finds a solution in $O(p^{1/4})$ steps on
+average, using a negligible amount of memory if a Pollard-rho style
+technique is used for collision detection. This justifies the 128-bits
+of classical security claim for the 511 bits prime CSIDH-512.
+
+The same collision finding algorithm works equally well on the full
+supersingular graph; since the graph has $\approx p/12$ vertices, the
+algorithm runs in $O(\sqrt{p})$ time.  In practice, Delfs and
+Galbraith~\cite{Delfs2016} recommend working in two steps:
+\begin{enumerate}
+\item Find paths from $E_0\to E_0'$ and $E_1\to E_1'$ to curves
+  $E_0',E_1'$ defined over $\F_p$;
+\item Use collision finding over the CSIDH graph to connect the paths.
+\end{enumerate}
+While the asymptotic complexity is the same, this algorithm produces
+shorter walks and is easier to parallelize; its quantum version using
+Grover search runs in $O(p^{1/4})$ operations.
+
+However neither algorithm is appropriate for SIDH. Indeed, as we
+mentioned, the secret isogeny in SIDH has unusually small degree
+$\approx 2^n\approx 3^m\approx \sqrt{p}$. Let's assume for
+concreteness that the degree is $2^n$, then we may compute two sets:
+the set $T_0$ of all curves at distance $\lceil n/2\rceil$ from $E_0$,
+and $T_1$ of those at distance $\lfloor n/2\rfloor$ from $E_1$.  We
+expect $T_0$ and $T_1$ to intersect in a single point, which is
+sometimes called a \emph{claw} of $T_0$ and $T_1$.  Using a $O(1)$
+access time structure such as a hash table to store, say, $T_0$, this
+algorithm requires $O(p^{1/4})$ time and storage. Considerably better
+than the generic one.
+
+It is however unrealistic to assume constant time access to such a
+huge amount of memory. Van Oorschot and Wiener's parallel collision
+search~\cite{JC:VanWie99} provides a much more realistic solution to
+the claw finding problem, performing well in practice on parallel
+architectures with a limited amount of memory; with a constant amount
+of memory, it runs in asymptotic time $O(p^{3/8})$. The application to
+SIDH was analyzed in detail by Adj \emph{et al.}~\cite{SAC:ACCMR18},
+then by Costello \emph{et al.}~\cite{PKC:CLNRV20}, and their
+conclusions were used to set parameters for the NIST candidate SIKE.
+
+We note that no known attack is capable of exploiting the knowledge of
+the action of the secret isogeny on the torsion bases. So called
+``torsion point attacks''~\cite{AC:Petit17,EPRINT:KMPPS20} seem so far
+to only give an advantage against ``overstretched'' versions of SIDH
+where the degrees of the isogenies are exponentially larger than
+$\sqrt{p}$. It is an open question to determine whether the torsion
+point information in SIDH can be exploited in an attack.
+
+Finally, quantum attacks. A generic claw finding algorithm by
+Tani~\cite{tani2009claw} is claimed to break SIDH using $O(p^{1/6})$
+time and memory. However a more in-depth analysis of the claims
+reveals that Tani's algorithm has no advantage over a simpler Grover
+search, and has thus a cost of $O(p^{1/4})$ at best, providing no
+speed-up over classical algorithms~\cite{C:JaqSch19}. Quantum
+accelerations of van Oorschot and Wiener's collision search have
+recently been analyzed and shown not to invalidate the security of the
+SIKE parameters either~\cite{EPRINT:JaqSch20}.
+
+CSIDH and SIDH are not the only existing isogeny based schemes.  A
+larger variety of assumptions exists to support post-quantum
+signatures, identification protocols, oblivious transfer, and many
+more. Nevertheless, the best available attacks always come down to
+claw finding or Kuperberg's algorithm, depending on the target.
+
+\section{What now?}
+
 % - Topics: hashing, commitments, signatures
 
   
