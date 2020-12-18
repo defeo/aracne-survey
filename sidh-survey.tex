@@ -408,11 +408,15 @@ email={aracne-2021@defeo.lu},
 
   Then, for any ideal $I_\phi\subset\End(E)$ with associated isogeny
   $\phi:E\to E'$, we define the operation $\star$ by
-  $I_\phi\star E \equiv E'$. In general this operation does not have a
-  simple algebraic structure, however, if we restrict the ideals in an
-  appropriate manner, $\star$ becomes a \emph{group action}. The
-  simplest such case is the object of the \emph{fundamental theorem of
-    complex multiplication}.
+  $I_\phi\star E \equiv E'$. We say that two ideals $I,J$ are
+  \emph{equivalent} if $I\star E=J\star E$, or equivalently if
+  $nI=J\cdot(\omega)$ for some integer $n$ and some principal ideal
+  $(\omega)$. We call \emph{ideal class} a set of equivalent
+  ideals. In general these classes do not have a simple algebraic
+  structure, however, if we restrict them in an appropriate manner,
+  $\star$ becomes a \emph{group action} by an \emph{ideal class
+    group}. The simplest such case is the object of the
+  \emph{fundamental theorem of complex multiplication}.
 
   \begin{theorem}[Complex multiplication]
     \label{th:cm}
@@ -420,10 +424,10 @@ email={aracne-2021@defeo.lu},
     quadratic imaginary order, denote by $\Ell_q(\O)$ the set of
     elliptic curves over $\F_q$ with endomorphism ring isomorphic to
     $\O$ and assume it is non-empty. The operation $\star$ defines an
-    action of the group of invertible ideals of $\O$ on $\Ell_q(\O)$,
-    and the action factors through the subgroup of principal
-    ideals. Said otherwise, the \emph{class group} $\Cl(\O)$ acts
-    regularly on $\Ell_q(\O)$.
+    action of the group of invertible fractional ideals of $\O$ on
+    $\Ell_q(\O)$, and the action factors through the subgroup of
+    principal ideals. Said otherwise, the \emph{class group} $\Cl(\O)$
+    acts regularly on $\Ell_q(\O)$.
   \end{theorem}
 
   Similar statements hold when $E$ is supersingular and
@@ -454,7 +458,7 @@ email={aracne-2021@defeo.lu},
   blurry. Mestre~\cite{mestre86}, then Pizer~\cite{pizer1,pizer2},
   then Kohel~\cite{kohel} showed that full supersingular graphs are
   connected, regular, and satisfy the \emph{Ramanujan property}, i.e.,
-  they are optimal expanders~\cite{}.
+  they are optimal expanders~\cite{hoory2006expander}.
 
   
   \section{CSIDH\dots}
@@ -789,7 +793,7 @@ cryptography.
 The ``smooth degree'' condition means that $\phi$ can be represented
 as a walk in some $k$-rational isogeny graph, which is an effective
 representation as long as the length of the walk is subexponential.
-It is clear that a solution to this problem breaks CSDIH, as it
+It is clear that a solution to this problem breaks CSIDH, as it
 produces an ideal in the same ideal class as the secret key.  It is
 less evident that it also breaks SIDH, but Galbraith \emph{et al.}
 showed that this is indeed the case, assuming credible
@@ -813,7 +817,7 @@ algorithm solving this specialized variant of the problem can be
 applied twice to solve the general instance. However, in CSIDH the
 curve $E_1$ is not provably uniformly distributed, but rather assumed
 to be computationally indistinguishable from random. Admittedly, this
-is a minor departure from the original problem, and there is a sort of
+is a minor departure from the original problem, and there is a
 consensus that the security of CSIDH is not far from that of the
 isogeny walk problem.
 
@@ -825,19 +829,19 @@ The situation of SIDH is more delicate:
   shorter than the diameter of the graph;
 \item On top of $E_1$, the SIDH protocol also publishes the evaluation
   points $\phi(P_B)$ and $\phi(Q_B)$, from whose knowledge one can
-  compute the action of $\phi$ on any point of $E_0[e^m]$ (change $B$
+  compute the action of $\phi$ on any point of $E_0[3^m]$ (change $B$
   to $A$ and $3$ to $2$ for Bob's isogeny).
 \end{itemize}
 
 The \emph{SIDH assumptions} essentially state that it is fine to give
 out this additional information, however they are widely believed to
 be considerably stronger than the isogeny walk assumption, as
-indicated by so called \emph{torsion point attacks} on overstretched
-variants of SIDH~\cite{AC:Petit17,EPRINT:KMPPS20}.
+indicated by the existence of \emph{torsion point attacks} on
+overstretched variants of SIDH~\cite{AC:Petit17,EPRINT:KMPPS20}.
 
 Finally, some may object that the prime $p$ used in SIDH or CSIDH has
 a very special form, and this should be taken into account when
-evaluating the strength of the relative assumptions. However using
+evaluating the strength of the related assumptions. However using
 special primes for efficiency has been a common practice in elliptic
 curve cryptography for decades, and it is widely believed that such
 specialization has negligible impact on security.
@@ -865,7 +869,7 @@ $\exp\bigl(\sqrt{\log(\#G)}\bigr)$, and thus CSIDH parameters must
 scale quadratically with the security level.  However the exact
 quantum security of concrete CSIDH parameters is the subject of a
 heated debate, and a consensus has yet to be
-reached~\cite{INDOCRYPT:BiaJaoSan14,BIJ18,Jao-etal-kuperberg-2018,10.1007/978-3-030-17656-3_15,EC:BonSch20,EC:Peikert20,cryptoeprint:2020:1520}.
+reached~\cite{BIJ18,Jao-etal-kuperberg-2018,10.1007/978-3-030-17656-3_15,EC:BonSch20,EC:Peikert20,cryptoeprint:2020:1520}.
 
 On the classical front, things are simpler. The best classical attack
 on CSIDH has been known for 20 years: it is a simple
@@ -889,7 +893,7 @@ Galbraith~\cite{Delfs2016} recommend working in two steps:
 \end{enumerate}
 While the asymptotic complexity is the same, this algorithm produces
 shorter walks and is easier to parallelize; its quantum version using
-Grover search runs in $O(p^{1/4})$ operations.
+Grover search runs in $O(p^{1/4})$ operations~\cite{INDOCRYPT:BiaJaoSan14}.
 
 However neither algorithm is appropriate for SIDH. Indeed, as we
 mentioned, the secret isogeny in SIDH has unusually small degree
@@ -915,9 +919,9 @@ conclusions were used to set parameters for the NIST candidate SIKE.
 
 We note that no known attack is capable of exploiting the knowledge of
 the action of the secret isogeny on the torsion bases. So called
-``torsion point attacks''~\cite{AC:Petit17,EPRINT:KMPPS20} seem so far
-to only give an advantage against ``overstretched'' versions of SIDH
-where the degrees of the isogenies are exponentially larger than
+\emph{torsion point attacks}~\cite{AC:Petit17,EPRINT:KMPPS20} seem so
+far to only give an advantage against ``overstretched'' versions of
+SIDH where the degrees of the isogenies are exponentially larger than
 $\sqrt{p}$. It is an open question to determine whether the torsion
 point information in SIDH can be exploited in an attack.
 
@@ -928,8 +932,8 @@ reveals that Tani's algorithm has no advantage over a simpler Grover
 search, and has thus a cost of $O(p^{1/4})$ at best, providing no
 speed-up over classical algorithms~\cite{C:JaqSch19}. Quantum
 accelerations of van Oorschot and Wiener's collision search have
-recently been analyzed and shown not to invalidate the security of the
-SIKE parameters either~\cite{EPRINT:JaqSch20}.
+recently been analyzed and shown not to invalidate the security claims
+of SIKE either~\cite{EPRINT:JaqSch20}.
 
 CSIDH and SIDH are not the only existing isogeny based schemes.  A
 larger variety of assumptions exists to support post-quantum
@@ -939,9 +943,152 @@ claw finding or Kuperberg's algorithm, depending on the target.
 
 \section{What now?}
 
-% - Topics: hashing, commitments, signatures
+Let us come full circle and have a look back at Pedersen's
+commitments. There, we needed $g$ and $h$, two random generators of a
+group $G$, and we formed the commitment $g^mh^r$ for message $m$ and
+randomness $r$.  Trying to port Pedersen's idea to isogenies, we may
+be tempted to interpret $g$ and $h$ as two distinct starting points in
+an isogeny graph, $m$ and $r$ as isogeny walks, $g^m$ and $h^r$ as
+their endpoints, or as $m\star g$ and $r\star h$ for those who prefer
+ideal action notation. However we are faced with two difficulties:
+\begin{itemize}
+\item What meaning to give to the product $g^m\cdot h^r$? In a group,
+  this is a natural operation with homomorphic properties. But
+  elliptic curve invariants of $m\star h$ and $r\star h$ do not
+  support a natural homomorphic operation, and thus the hiding
+  properties of Pedersen's commitment are lost.
+\item Recall that the discrete logarithm $\log_g(h)$ must be unknown
+  to the committer for the commitment to be binding. How does one
+  ensure that? In principle there could be a trusted authority who is
+  in charge of generating $g$ and $h$ honestly, so that $\log_g(h)$ is
+  unknown to anyone.
 
-  
+  In practice, trusted authorities are a burden, but there is a much
+  simpler option available for many discrete logarithm groups $G$. A
+  surjective function $H:\Z\to G$ is called a \emph{hash into $G$} if
+  given $(x,y,H(x),H(y))$ it is hard to compute $\log_{H(x)}(H(y))$. A
+  non-example of hash is the map $x\mapsto g^x$ for some fixed
+  generator $g$. An example of hash into the multiplicative group
+  $\F_p^\times$ of a finite field is the map
+  $x\mapsto (x\bmod(p-1)) + 1$.  A hash into $G$ can be used to
+  generate Pedersen's base elements by setting $g=H(r_1)$ and
+  $h=H(r_2)$ from some verifiable (pseudo)-random integers $r_1,r_2$
+  (e.g., some parts of the digits of $\pi$).
+
+  In the realm of isogenies there is no efficient \emph{hash into
+    interesting isogeny classes}: we do not know how to generate
+  random supersingular curves over $\F_p$, or over $\F_{p^2}$, other
+  than by starting from a well known supersingular elliptic curve
+  (e.g., $y^2=x^3+x$) and performing a long enough random walk in some
+  isogeny graph. This generation process is clearly the isogeny graph
+  equivalent of the non-hash $x\mapsto g^x$.  In fact, defining an
+  efficient \emph{hash into the supersingular set} is one of the major
+  open questions in isogeny based
+  cryptography~\cite{galbraith2018computational}, and the most
+  ``obvious'' ideas have already been ruled
+  out~\cite{EC:CasPanVer20,love2019supersingular}.
+\end{itemize}
+
+There is no evidence that hashing in the supersingular set should be
+hard, and solving this problem would pave the way to many
+applications, such as making the SIDH assumptions weaker by using a
+verifiably random starting curve $E_0$, removing trusted setups from
+some protocols~\cite{AC:DMPS19,EPRINT:BurDeF20}, constructing
+efficient oblivious pseudo-random functions from
+CSIDH~\cite{jarecki2016highly}, and certainly many more.
+
+The lack of a homomorphic operation on SIDH or CSIDH public keys,
+though, is an even greater problem. Not only it breaks the idea behind
+Pedersen commitments, but it is also the main obstacle to translating
+to the isogeny setting efficient discrete logarithm signature schemes
+such as Schnorr's~\cite{C:Schnorr89} or ECDSA, and many more basic
+protocols known from discrete logarithms.
+
+Which naturally brings us to the topic of signatures: as the reader
+may know, no isogeny based signatures were submitted to the NIST
+competition. Indeed, isogeny-based signatures tend to be extremely
+large and inefficient. The reason is that they are all obtained by
+applying the Fiat-Shamir transform~\cite{C:FiaSha86} to hundreds of
+parallel executions of an interactive identification protocol, thus an
+SIDH or CSIDH based signature typically costs hundreds of times more
+than the corresponding key exchange scheme.
+
+There is not much to SIDH signatures: they consist in proving
+knowledge of a secret isogeny by committing to the curves of a
+commutative square like in Eq.~\eqref{eq:sidh}, and then revealing
+some but not all of the involved isogenies~\cite{defeo+jao+plut12}.
+In practice they make for signatures in the hundreds of kilobytes,
+taking seconds to generate and verify~\cite{FC:YAJJS17}.
+
+CSIDH signatures offer more variety. They are somehow similar to
+discrete logarithm signatures: to prove knowledge of a secret ideal
+$S$ such that $E_p=S\star E_0$, they commit to a random curve
+$E_r=R\star E_0$, then reveal $RS^{-b}$, in response to a binary
+challenge $b\in\{0,1\}$. Compare this to Schnorr signatures where
+knowledge of the secret exponent in $g^s$ is proven by committing to
+$g^r$ and then revealing $r-cs$ for some challenge $c\in\Z/p\Z$. With
+such a large challenge space, the Schnorr protocol needs to be
+executed only once in order to produce an unforgeable signature. In
+contrast CSIDH can support a larger space only at the cost of an
+exponential increase in public key size: this produces decently short
+signatures, at the cost of several minutes for
+signing~\cite{EC:DeFGal19}. Signing times can be considerably reduced,
+though, if the structure of the class group is pre-computed, an
+extremely expensive task that we already discussed previously. This is
+the idea behind CSI-FiSh~\cite{10.1007/978-3-030-34578-5_9}, the only
+practically usable isogeny-based signature until recently.
+
+A third family of isogeny signatures is based on different assumptions
+than CSIDH or SIDH. At the hearth of these signatures, there is an
+interactive protocol to prove knowledge of the endomorphism ring of a
+supersingular curve; we already saw that this is heuristically
+equivalent to knowing an isogeny walk between a special starting curve
+such as $y^2=x^3+x$, and a random curve $E_p$. The idea is similar to
+CSIDH based signatures: first commit to a random curve
+$E_r=R\star E_p$, then respond to a challenge by revealing some ideal
+related to the secret. The first such
+protocol~\cite{AC:GalPetSil17,JC:GalPetSil20} only accepted binary
+challenges and was notoriously difficult to implement, it has thus
+always been viewed as a purely theoretical effort. In a recent
+breakthrough SQISign, a similar signature scheme with exponentially
+large challenge space, has been introduced~\cite{AC:DKLPW20}.  SQISign
+is not easy to implement, nor to analyze, however it boasts the
+shortest signature and public key combined size among all post-quantum
+candidates, by a fair margin. Signing time is not exactly fast, in the
+order of seconds, but verification is comparable in speed to SIDH or
+CSIDH.
+
+To summarize, despite the similarities between CSIDH/SIDH and classic
+Diffie--Hellman, several challenges materialize when trying to rebuild
+on them most cryptographic protocols that we used to take for granted.
+Highly advanced techniques are needed even for the relatively basic
+task of signing, and for most other protocols we do not even have an
+isogeny based solution yet. Fortunately, there is a vast space of
+cryptographic possibilities as of yet unexplored.
+
+At present, research on isogeny based cryptography mainly focuses on
+three areas: efficient implementations, both in software and hardware;
+cryptanalysis, both mathematical and physical; and achieving new
+primitives. I am happy to remark that there is more work in each of
+these areas than I could possibly cite in this short survey.
+
+Turning to more prospective research, isogeny graphs of higher
+dimensional abelian varieties are still an insufficiently researched
+area. While some preliminary results indicate that they might not be
+the best candidates for basic schemes such as key
+exchange~\cite{PQCRYPTO:FlyTi19,10.1515/jmc-2019-0021,PQCRYPTO:CosSmi20},
+there is still hope that the additional structure may be used to
+construct advanced functionalities. Another promising source of
+advanced protocols comes from the interplay between isogenies and
+pairings. Although it clearly cannot lead to post-quantum schemes, it
+has been recently used to realize some unique \emph{time-release}
+primitives~\cite{AC:DMPS19,EPRINT:BurDeF20}.
+
+My feeling is that we are only scratching the surface of isogeny based
+cryptography, and that much more is to come. I hope this short and
+incomplete summary will motivate many of you to look more in depth
+into these topics!
+
 \end{otherlanguage}
 
 \bibliographystyle{plainurl}
@@ -958,3 +1105,4 @@ claw finding or Kuperberg's algorithm, depending on the target.
 % LocalWords:  isogeny additively morphisms morphism supersingular
 % LocalWords:  isogenies undirected expander quaternion endomorphism
 % LocalWords:  monic Cayley discriminants inhomogeneous instantiation
+% LocalWords:  homomorphic
